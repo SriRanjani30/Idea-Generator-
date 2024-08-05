@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project Idea Generator</title>
+    <title>Multipurpose Idea Generator</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
@@ -28,7 +28,9 @@
             margin-bottom: 20px;
             color: #333;
         }
-        .container button {
+        .container select, .container button {
+            margin-top: 10px;
+            margin-bottom: 10px;
             background-color: #007bff;
             color: white;
             padding: 12px 24px;
@@ -38,7 +40,7 @@
             font-size: 16px;
             transition: background-color 0.3s;
         }
-        .container button:hover {
+        .container select:hover, .container button:hover {
             background-color: #0056b3;
         }
         .container .idea {
@@ -77,47 +79,83 @@
             background-color: #ccc;
             cursor: not-allowed;
         }
+        #favorites {
+            margin-top: 20px;
+            display: none;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Project Idea Generator</h1>
-        <button onclick="generateIdea()"><i class="fas fa-lightbulb"></i> Get a Project Idea</button>
+        <h1>Multipurpose Idea Generator</h1>
+        <select id="categorySelect" onchange="generateIdea()">
+            <option value="projects">Project Ideas</option>
+            <option value="workouts">Workout Ideas</option>
+            <option value="recipes">Recipe Ideas</option>
+        </select>
+        <button onclick="generateIdea()"><i class="fas fa-lightbulb"></i> Get an Idea</button>
         <div class="idea hidden" id="idea"></div>
         <div class="actions">
             <button id="saveBtn" onclick="saveIdea()" disabled><i class="fas fa-save"></i> Save</button>
             <button id="copyBtn" onclick="copyIdea()" disabled><i class="fas fa-copy"></i> Copy</button>
             <a id="shareBtn" href="#" target="_blank" onclick="shareIdea()" disabled><i class="fas fa-share-alt"></i> Share</a>
         </div>
-        <div id="favorites" style="margin-top: 20px; display: none;">
+        <div id="favorites">
             <h2>Favorites</h2>
             <ul id="favoritesList"></ul>
         </div>
     </div>
 
     <script>
-        const ideas = [
-            "Build a personal blog website.",
-            "Create a to-do list app.",
-            "Develop a weather forecasting app.",
-            "Make a simple calculator.",
-            "Create a responsive portfolio site.",
-            "Develop a recipe sharing app.",
-            "Build a currency converter.",
-            "Create a task management tool.",
-            "Make an online quiz game.",
-            "Develop a fitness tracking app.",
-            "Build a real-time chat application.",
-            "Create a stock price tracking app.",
-            "Develop a music streaming service.",
-            "Build an e-commerce site.",
-            "Create a travel planning app.",
-            "Develop a virtual classroom platform."
-        ];
+        const ideas = {
+            projects: [
+                "Build a personal blog website.",
+                "Create a to-do list app.",
+                "Develop a weather forecasting app.",
+                "Make a simple calculator.",
+                "Create a responsive portfolio site.",
+                "Develop a recipe sharing app.",
+                "Build a currency converter.",
+                "Create a task management tool.",
+                "Make an online quiz game.",
+                "Develop a fitness tracking app.",
+                "Build a real-time chat application.",
+                "Create a stock price tracking app.",
+                "Develop a music streaming service.",
+                "Build an e-commerce site.",
+                "Create a travel planning app.",
+                "Develop a virtual classroom platform."
+            ],
+            workouts: [
+                "30-minute HIIT workout.",
+                "10,000 steps challenge.",
+                "Yoga for beginners.",
+                "Full-body strength training.",
+                "Pilates session.",
+                "Morning stretching routine.",
+                "Cycling for 1 hour.",
+                "Swimming for 30 minutes.",
+                "5K run.",
+                "Dance workout."
+            ],
+            recipes: [
+                "Spaghetti Carbonara.",
+                "Chicken Alfredo.",
+                "Vegetable Stir Fry.",
+                "Beef Tacos.",
+                "Vegan Buddha Bowl.",
+                "Chocolate Chip Cookies.",
+                "Homemade Pizza.",
+                "Grilled Cheese Sandwich.",
+                "Caesar Salad.",
+                "Banana Smoothie."
+            ]
+        };
 
         function generateIdea() {
-            const randomIndex = Math.floor(Math.random() * ideas.length);
-            const idea = ideas[randomIndex];
+            const category = document.getElementById('categorySelect').value;
+            const randomIndex = Math.floor(Math.random() * ideas[category].length);
+            const idea = ideas[category][randomIndex];
             const ideaElement = document.getElementById('idea');
             ideaElement.classList.add('hidden');
             setTimeout(() => {
