@@ -101,6 +101,10 @@
         .profile {
             margin-bottom: 20px;
         }
+         .profile img {
+        width: 100px; 
+        height: 100px;
+    }
         .section {
             display: none;
         }
@@ -137,7 +141,7 @@
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
         <div class="profile">
-            <img src="https://via.placeholder.com/80" alt="Profile Picture" class="circle responsive-img">
+            <img src="Images/Profile.jpg" alt="Profile Picture" class="circle responsive-img">
             <h6>Admin</h6>
         </div>
         <a href="#dashboard" onclick="showSection('dashboard')">Dashboard</a>
@@ -393,7 +397,6 @@
         }
 
         function saveAppSettings() {
-            // Implement the logic to save application settings here
             showNotification('Application settings saved!');
         }
 
