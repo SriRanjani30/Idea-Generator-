@@ -54,6 +54,29 @@
         .container .idea.hidden {
             opacity: 0;
         }
+        .actions {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-around;
+        }
+        .actions button, .actions a {
+            background-color: #28a745;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        .actions button:hover, .actions a:hover {
+            background-color: #218838;
+        }
+        .actions button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
     </style>
 </head>
 <body>
@@ -61,6 +84,15 @@
         <h1>Project Idea Generator</h1>
         <button onclick="generateIdea()"><i class="fas fa-lightbulb"></i> Get a Project Idea</button>
         <div class="idea hidden" id="idea"></div>
+        <div class="actions">
+            <button id="saveBtn" onclick="saveIdea()" disabled><i class="fas fa-save"></i> Save</button>
+            <button id="copyBtn" onclick="copyIdea()" disabled><i class="fas fa-copy"></i> Copy</button>
+            <a id="shareBtn" href="#" target="_blank" onclick="shareIdea()" disabled><i class="fas fa-share-alt"></i> Share</a>
+        </div>
+        <div id="favorites" style="margin-top: 20px; display: none;">
+            <h2>Favorites</h2>
+            <ul id="favoritesList"></ul>
+        </div>
     </div>
 
     <script>
@@ -91,7 +123,34 @@
             setTimeout(() => {
                 ideaElement.textContent = idea;
                 ideaElement.classList.remove('hidden');
+                document.getElementById('saveBtn').disabled = false;
+                document.getElementById('copyBtn').disabled = false;
+                document.getElementById('shareBtn').disabled = false;
             }, 300);
+        }
+
+        function saveIdea() {
+            const idea = document.getElementById('idea').textContent;
+            if (idea) {
+                const favoritesList = document.getElementById('favoritesList');
+                const listItem = document.createElement('li');
+                listItem.textContent = idea;
+                favoritesList.appendChild(listItem);
+                document.getElementById('favorites').style.display = 'block';
+            }
+        }
+
+        function copyIdea() {
+            const idea = document.getElementById('idea').textContent;
+            navigator.clipboard.writeText(idea).then(() => {
+                alert('Idea copied to clipboard!');
+            });
+        }
+
+        function shareIdea() {
+            const idea = document.getElementById('idea').textContent;
+            const shareBtn = document.getElementById('shareBtn');
+            shareBtn.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(idea)}`;
         }
     </script>
 </body>
