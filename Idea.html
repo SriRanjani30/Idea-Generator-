@@ -11,9 +11,10 @@
             height: 100%;
             margin: 0;
             display: flex;
+            background-color: #f8f9fa;
         }
         .sidebar {
-            width: 200px;
+            width: 250px;
             background-color: #007bff;
             color: white;
             display: flex;
@@ -21,11 +22,14 @@
             align-items: center;
             padding-top: 20px;
             height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
         }
         .sidebar a {
             color: white;
             text-decoration: none;
-            width: 100;
+            width: 100%;
             text-align: center;
             padding: 15px 0;
             transition: background-color 0.3s;
@@ -34,42 +38,32 @@
             background-color: #0056b3;
         }
         .main-content {
+            margin-left: 500px;
             flex: 1;
             display: flex;
             flex-direction: column;
-            overflow-y: auto;
-        }
-        .header {
-            background-color: #007bff;
-            color: white;
             padding: 20px;
-            text-align: center;
-            font-size: 50px;
-        }
-        .content {
-            padding: 20px;
-            flex: 1;
         }
         .card {
-            margin-bottom: 20px;
+            width: 100%;
+            max-width: 1000px;
         }
         .card-header {
             background-color: #007bff;
             color: white;
-            padding: 100px;
+            padding: 10px;
         }
         .actions button, .actions a {
             background-color: #28a745;
             color: white;
-            padding: 25px;
+            padding: 5px;
             border: none;
-            border-radius: 2px;
+            border-radius: 5px;
             cursor: pointer;
-            font-size: 5px;
+            font-size: 14px;
             text-decoration: none;
             transition: background-color 0.3s;
-            margin: 200px;
-            height: 50%;
+            margin: 60px;
         }
         .actions button:hover, .actions a:hover {
             background-color: #218838;
@@ -78,18 +72,106 @@
             background-color: #ccc;
             cursor: not-allowed;
         }
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #28a745;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            display: none;
+            z-index: 1000;
+        }
+        .settings-panel {
+            display: none;
+            position: absolute;
+            top: 60px;
+            right: 20px;
+            width: 300px;
+            background-color: white;
+            box-shadow: 0px 2px 10px rgba(0,0,0,0.1);
+            padding: 15px;
+            border-radius: 5px;
+        }
+        .settings-panel label {
+            margin-right: 10px;
+        }
+        .profile {
+            margin-bottom: 20px;
+        }
+        .section {
+            display: none;
+        }
+        .section.active {
+            display: block;
+        }
+        .user-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        .user-table th, .user-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        .user-table th {
+            background-color: #007bff;
+            color: white;
+        }
+        .user-table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
     </style>
 </head>
 <body>
     <div class="sidebar">
-        <a href="#dashboard">Dashboard</a>
-        <a href="#ideas">Idea Generator</a>
-        <a href="#favorites">Favorites</a>
-        <a href="#settings">Settings</a>
+        <div class="profile">
+            <img src="https://via.placeholder.com/80" alt="Profile Picture" class="circle responsive-img">
+            <h6>Admin</h6>
+        </div>
+        <a href="#dashboard" onclick="showSection('dashboard')">Dashboard</a>
+        <a href="#ideas" onclick="showSection('ideas')">Idea Generator</a>
+        <a href="#settings" onclick="toggleSettings()">Settings</a>
+        <a href="#admin" onclick="showSection('admin')">Admin</a>
+        <a href="#logout">Logout</a>
     </div>
     <div class="main-content">
-        <div class="header">Multipurpose Idea Generator Backend</div>
-        <div class="content">
+        <div id="dashboard" class="section active">
+            <h4>Dashboard</h4>
+            <div class="card">
+                <div class="card-content">
+                    <h5>Application Overview</h5>
+                    <p>Welcome to the Dashboard! Here you can find an overview of the application.</p>
+                    <div class="row">
+                        <div class="col s6">
+                            <div class="card">
+                                <div class="card-content">
+                                    <span class="card-title">User Statistics</span>
+                                    <p>Total Users: 1234</p>
+                                    <p>Active Users: 456</p>
+                                    <p>New Users This Week: 78</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col s6">
+                            <div class="card">
+                                <div class="card-content">
+                                    <span class="card-title">Recent Activity</span>
+                                    <ul>
+                                        <li>User JohnDoe created a new project.</li>
+                                        <li>User JaneDoe updated their profile.</li>
+                                        <li>User Admin123 logged in.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="ideas" class="section">
             <div class="card">
                 <div class="card-content">
                     <span class="card-title">Generate New Idea</span>
@@ -110,14 +192,81 @@
                     </div>
                 </div>
             </div>
+
             <div class="card" id="favoritesCard" style="display: none;">
                 <div class="card-content">
                     <span class="card-title">Favorites</span>
+                    <input type="text" id="searchFavorites" placeholder="Search Favorites" oninput="searchFavorites()">
                     <ul id="favoritesList" class="collection"></ul>
                 </div>
             </div>
         </div>
+
+        <div id="settings" class="section">
+            <h4>Settings</h4>
+            <div class="settings-panel" id="settingsPanel">
+                <h6>General Settings</h6>
+                <label for="themeToggle">Dark Mode</label>
+                <input type="checkbox" id="themeToggle" onchange="toggleTheme()">
+                <h6>User Settings</h6>
+                <label for="userName">Username:</label>
+                <input type="text" id="userName" value="Admin">
+                <label for="userEmail">Email:</label>
+                <input type="email" id="userEmail" value="admin@example.com">
+                <button class="btn waves-effect waves-light" onclick="saveSettings()">Save Settings</button>
+            </div>
+        </div>
+
+        <div id="admin" class="section">
+            <h4>Admin</h4>
+            <div class="card">
+                <div class="card-content">
+                    <span class="card-title">User Management</span>
+                    <table class="user-table">
+                        <thead>
+                            <tr>
+                                <th>User ID</th>
+                                <th>Username</th>
+                                <th>Email</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>JohnDoe</td>
+                                <td>johndoe@example.com</td>
+                                <td>Active</td>
+                                <td><button class="btn-small">Edit</button> <button class="btn-small">Delete</button></td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>JaneDoe</td>
+                                <td>janedoe@example.com</td>
+                                <td>Inactive</td>
+                                <td><button class="btn-small">Edit</button> <button class="btn-small">Delete</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-content">
+                    <span class="card-title">Application Settings</span>
+                    <form id="appSettingsForm">
+                        <label for="siteName">Site Name:</label>
+                        <input type="text" id="siteName" value="MyApp">
+                        <label for="siteDescription">Site Description:</label>
+                        <textarea id="siteDescription">Your app description here...</textarea>
+                        <button class="btn waves-effect waves-light" onclick="saveAppSettings()">Save Settings</button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <div class="notification" id="notification">Notification</div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
@@ -127,57 +276,84 @@
             M.FormSelect.init(elems);
         });
 
-        const ideas = {
-            projects: [
-                "Build a personal blog website.",
-                "Create a to-do list app.",
-                "Develop a weather forecasting app.",
-                "Make a simple calculator.",
-                "Create a responsive portfolio site.",
-                "Develop a recipe sharing app.",
-                "Build a currency converter.",
-                "Create a task management tool.",
-                "Make an online quiz game.",
-                "Develop a fitness tracking app.",
-                "Build a real-time chat application.",
-                "Create a stock price tracking app.",
-                "Develop a music streaming service.",
-                "Build an e-commerce site.",
-                "Create a travel planning app.",
-                "Develop a virtual classroom platform."
-            ],
-            workouts: [
-                "30-minute HIIT workout.",
-                "10,000 steps challenge.",
-                "Yoga for beginners.",
-                "Full-body strength training.",
-                "Pilates session.",
-                "Morning stretching routine.",
-                "Cycling for 1 hour.",
-                "Swimming for 30 minutes.",
-                "5K run.",
-                "Dance workout."
-            ],
-            recipes: [
-                "Spaghetti Carbonara.",
-                "Chicken Alfredo.",
-                "Vegetable Stir Fry.",
-                "Beef Tacos.",
-                "Vegan Buddha Bowl.",
-                "Chocolate Chip Cookies.",
-                "Homemade Pizza.",
-                "Grilled Cheese Sandwich.",
-                "Caesar Salad.",
-                "Banana Smoothie."
-            ]
-        };
+        function showSection(sectionId) {
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionId).classList.add('active');
+        }
+
+        function toggleSettings() {
+            const panel = document.getElementById('settingsPanel');
+            panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function toggleTheme() {
+            const darkMode = document.getElementById('themeToggle').checked;
+            document.body.style.backgroundColor = darkMode ? '#333' : '#f8f9fa';
+            document.body.style.color = darkMode ? '#f8f9fa' : '#333';
+        }
+
+        function saveSettings() {
+            // Implement the logic to save settings here
+            showNotification('Settings saved!');
+        }
+
+        function saveAppSettings() {
+            // Implement the logic to save application settings here
+            showNotification('Application settings saved!');
+        }
 
         function generateIdea() {
+            const ideas = {
+                projects: [
+                    "Build a personal blog website.",
+                    "Create a to-do list app.",
+                    "Develop a weather forecasting app.",
+                    "Make a simple calculator.",
+                    "Create a responsive portfolio site.",
+                    "Develop a recipe sharing app.",
+                    "Build a currency converter.",
+                    "Create a task management tool.",
+                    "Make an online quiz game.",
+                    "Develop a fitness tracking app.",
+                    "Build a real-time chat application.",
+                    "Create a stock price tracking app.",
+                    "Develop a music streaming service.",
+                    "Build an e-commerce site.",
+                    "Create a travel planning app.",
+                    "Develop a virtual classroom platform."
+                ],
+                workouts: [
+                    "30-minute HIIT workout.",
+                    "10,000 steps challenge.",
+                    "Yoga for beginners.",
+                    "Full-body strength training.",
+                    "Pilates session.",
+                    "Morning stretching routine.",
+                    "Cycling for 1 hour.",
+                    "Swimming for 30 minutes.",
+                    "5K run.",
+                    "Dance workout."
+                ],
+                recipes: [
+                    "Spaghetti Carbonara.",
+                    "Chicken Alfredo.",
+                    "Vegetable Stir Fry.",
+                    "Beef Tacos.",
+                    "Vegan Buddha Bowl.",
+                    "Chocolate Chip Cookies.",
+                    "Homemade Pizza.",
+                    "Greek Salad.",
+                    "Chicken Curry.",
+                    "Smoothie Bowl."
+                ]
+            };
+
             const category = document.getElementById('categorySelect').value;
-            const randomIndex = Math.floor(Math.random() * ideas[category].length);
-            const idea = ideas[category][randomIndex];
-            const ideaElement = document.getElementById('idea');
-            ideaElement.textContent = idea;
+            const idea = ideas[category][Math.floor(Math.random() * ideas[category].length)];
+            document.getElementById('idea').textContent = idea;
             document.getElementById('saveBtn').disabled = false;
             document.getElementById('copyBtn').disabled = false;
             document.getElementById('shareBtn').disabled = false;
@@ -189,32 +365,49 @@
                 const favoritesList = document.getElementById('favoritesList');
                 const listItem = document.createElement('li');
                 listItem.className = 'collection-item';
-                listItem.textContent = idea;
+                listItem.innerHTML = `${idea} <a href="#!" class="secondary-content" onclick="removeFavorite(this)"><i class="material-icons">delete</i></a>`;
                 favoritesList.appendChild(listItem);
                 document.getElementById('favoritesCard').style.display = 'block';
+                showNotification('Idea saved to favorites!');
             }
         }
 
         function copyIdea() {
             const idea = document.getElementById('idea').textContent;
             navigator.clipboard.writeText(idea).then(() => {
-                M.toast({html: 'Idea copied to clipboard!'});
+                showNotification('Idea copied to clipboard!');
             });
         }
 
-        function <!DOCTYPE html>
-        <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <title>Page title</title>
-        </head>
-        <body>
-            shareIdea()
-        </body>
-        </html> {
+        function shareIdea() {
             const idea = document.getElementById('idea').textContent;
             const shareBtn = document.getElementById('shareBtn');
             shareBtn.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(idea)}`;
+        }
+
+        function searchFavorites() {
+            const query = document.getElementById('searchFavorites').value.toLowerCase();
+            const items = document.querySelectorAll('#favoritesList .collection-item');
+            items.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                item.style.display = text.includes(query) ? '' : 'none';
+            });
+        }
+
+        function removeFavorite(element) {
+            element.closest('li').remove();
+            if (!document.querySelector('#favoritesList li')) {
+                document.getElementById('favoritesCard').style.display = 'none';
+            }
+        }
+
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.style.display = 'block';
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
         }
     </script>
 </body>
